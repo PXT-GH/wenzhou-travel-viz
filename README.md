@@ -126,7 +126,7 @@ streamlit run app.py
 
 ## 👨‍💻 作者
 
-温州大学 · 数据可视化课程大作业
+pxt
 
 ---
 
