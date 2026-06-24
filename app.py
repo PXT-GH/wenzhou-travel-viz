@@ -20,328 +20,462 @@ from trip_planner import plan_trip
 
 st.set_page_config(page_title="温州智旅 — 未来旅游数据平台", page_icon="🌐", layout="wide", initial_sidebar_state="expanded")
 
-# ==================== 深蓝色未来感主题 CSS ====================
+# ==================== 深蓝色未来感主题 CSS v4.0 ====================
 st.markdown("""
 <style>
-    /* ===== 全局根元素 ===== */
-    html, body, .stApp, .main, [data-testid="stAppViewContainer"] {
-        background: linear-gradient(135deg, #0a0e27 0%, #12163a 30%, #1a1f4e 60%, #0d1530 100%) !important;
-        color: #e0e0e0 !important;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-    /* ===== 主内容容器 ===== */
-    .main .block-container {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-        background: transparent !important;
-    }
-    section[data-testid="stSidebar"] + .main .block-container {
-        background: transparent !important;
-    }
-    [data-testid="stAppViewContainer"] > .main {
-        background: transparent !important;
-    }
-
-    /* ===== 所有文字强制深色模式 ===== */
-    p, li, span, div, label, .stMarkdown, .stText, .st-bd, .st-c0, .st-c1, .st-c2, .st-c3, .st-c4 {
-        color: #e0e0e0 !important;
-    }
-    p { color: rgba(230, 230, 250, 0.9) !important; line-height: 1.7; }
-
-    /* ===== 指标卡片 — 霓虹光效 ===== */
-    [data-testid="stMetric"] {
-        background: linear-gradient(135deg, rgba(102,126,234,0.15) 0%, rgba(118,75,162,0.15) 100%) !important;
-        border: 1px solid rgba(102,126,234,0.3) !important;
-        padding: 1rem 1.2rem !important;
-        border-radius: 0.8rem !important;
-        box-shadow: 0 0 20px rgba(102,126,234,0.1), inset 0 0 15px rgba(102,126,234,0.05) !important;
-        backdrop-filter: blur(10px) !important;
-    }
-    [data-testid="stMetric"] label {
-        color: rgba(255,255,255,0.7) !important;
-        font-size: 0.85rem !important;
-        font-weight: normal !important;
-    }
-    [data-testid="stMetric"] [data-testid="stMetricValue"] {
-        color: #00d4ff !important;
-        font-size: 1.6rem !important;
-        font-weight: bold !important;
-        text-shadow: 0 0 10px rgba(0,212,255,0.3);
-    }
-    [data-testid="stMetric"] [data-testid="stMetricDelta"] {
-        color: rgba(0,212,255,0.8) !important;
-    }
-
-    /* ===== 侧边栏 ===== */
-    section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, rgba(8,12,35,0.98) 0%, rgba(14,18,50,0.98) 50%, rgba(10,16,38,0.98) 100%) !important;
-        border-right: 1px solid rgba(102,126,234,0.15) !important;
-    }
-    section[data-testid="stSidebar"] .stRadio label {
-        color: rgba(220, 220, 250, 0.85) !important;
-        font-size: 0.95rem !important;
-        padding: 0.3rem 0.5rem !important;
-        border-radius: 6px !important;
-        transition: all 0.3s !important;
-    }
-    section[data-testid="stSidebar"] .stRadio label:hover {
-        color: #00d4ff !important;
-        background: rgba(0,212,255,0.08) !important;
-    }
-    section[data-testid="stSidebar"] [data-testid="stMarkdown"] h1 {
-        color: #00d4ff !important;
-        text-shadow: 0 0 20px rgba(0,212,255,0.2);
-    }
-    section[data-testid="stSidebar"] [data-testid="stMarkdown"] p {
-        color: rgba(180,180,220,0.6) !important;
-    }
-    section[data-testid="stSidebar"] hr {
-        border-color: rgba(102,126,234,0.15) !important;
-    }
-
-    /* ===== 下拉框 / 滑块 / 选择器等控件 ===== */
-    .stSelectbox label, .stSlider label, .stMultiSelect label {
-        color: rgba(220,220,250,0.8) !important;
-        font-weight: 500 !important;
-    }
-    /* 下拉框主输入区 */
-    .stSelectbox > div > div, .stMultiSelect > div > div {
-        background: rgba(20, 25, 60, 0.9) !important;
-        border-color: rgba(102,126,234,0.35) !important;
-        color: #e0e0f0 !important;
-        border-radius: 8px !important;
-    }
-    /* 下拉框选中文本 */
-    .stSelectbox > div > div > div, .stMultiSelect > div > div > div {
-        color: #e0e0f0 !important;
-    }
-    .stSelectbox > div > div:hover, .stMultiSelect > div > div:hover {
-        border-color: rgba(0,212,255,0.5) !important;
-    }
-    /* 下拉框下拉菜单 */
-    div[data-baseweb="popover"] ul, div[data-baseweb="menu"] {
-        background: rgba(15, 20, 50, 0.98) !important;
-        border: 1px solid rgba(102,126,234,0.3) !important;
-        border-radius: 8px !important;
-    }
-    div[data-baseweb="popover"] li, div[data-baseweb="menu"] li {
-        color: #e0e0f0 !important;
-        background: transparent !important;
-    }
-    div[data-baseweb="popover"] li:hover, div[data-baseweb="menu"] li:hover {
-        background: rgba(102,126,234,0.2) !important;
-        color: #00d4ff !important;
-    }
-    div[data-baseweb="popover"] li[aria-selected="true"], div[data-baseweb="menu"] li[aria-selected="true"] {
-        background: rgba(102,126,234,0.3) !important;
-        color: #00d4ff !important;
-    }
-    /* 多选标签 */
-    .stMultiSelect [data-baseweb="tag"] {
-        background: rgba(102,126,234,0.25) !important;
-        color: #e0e0f0 !important;
-        border-radius: 4px !important;
-    }
-    .stMultiSelect [data-baseweb="tag"] span {
-        color: #e0e0f0 !important;
-    }
-    .stMultiSelect [data-baseweb="tag"] svg {
-        fill: #e0e0f0 !important;
-    }
-    /* 下拉框箭头 */
-    .stSelectbox svg, .stMultiSelect svg {
-        fill: rgba(200, 200, 230, 0.6) !important;
-    }
-    .st-bb, .st-bc, .st-bd, .st-be, .st-bf, .st-bg {
-        background: rgba(20, 25, 60, 0.9) !important;
-        border-color: rgba(102,126,234,0.25) !important;
-        color: #e0e0f0 !important;
-    }
-    .stSlider > div > div {
-        color: #00d4ff !important;
-    }
-    div[data-baseweb="select"] > div {
-        background: rgba(20, 25, 60, 0.9) !important;
-        border-color: rgba(102,126,234,0.25) !important;
-    }
-    /* 数字输入框 */
-    .stNumberInput input {
-        background: rgba(20, 25, 60, 0.9) !important;
-        color: #e0e0f0 !important;
-        border-color: rgba(102,126,234,0.25) !important;
-    }
-
-    /* ===== 选项卡 ===== */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 4px;
-        background: rgba(255,255,255,0.03);
-        border-radius: 12px;
-        padding: 4px;
-        border: 1px solid rgba(102,126,234,0.1);
-    }
-    .stTabs [data-baseweb="tab"] {
-        padding: 8px 18px;
-        border-radius: 8px;
-        color: rgba(200,200,230,0.7) !important;
-        background: transparent;
-        transition: all 0.3s;
-        font-weight: 500;
-        border: none !important;
-    }
-    .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-        color: white !important;
-        box-shadow: 0 4px 15px rgba(102,126,234,0.3);
-    }
-
-    /* ===== 标题 ===== */
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif !important;
-        color: #f0f0ff !important;
-    }
-    h1 {
-        font-size: 2rem !important;
-        background: linear-gradient(90deg, #00d4ff, #667eea, #764ba2) !important;
-        -webkit-background-clip: text !important;
-        -webkit-text-fill-color: transparent !important;
-        background-clip: text !important;
-        margin-bottom: 0.5rem !important;
-    }
-    h2 {
-        border-bottom: 1px solid rgba(102,126,234,0.2);
-        padding-bottom: 0.5rem;
-        color: #c0c0f0 !important;
-        font-size: 1.4rem !important;
-    }
-    h3 { color: #b0b0e8 !important; font-size: 1.2rem !important; }
-    h4 { color: #a0a0e0 !important; }
-
-    /* ===== 提示框 ===== */
-    .stAlert > div {
-        border-radius: 0.6rem !important;
-        background: rgba(102,126,234,0.12) !important;
-        border: 1px solid rgba(102,126,234,0.2) !important;
-        color: #d0d0f0 !important;
-    }
-    .stAlert p { color: #d0d0f0 !important; }
-
-    /* ===== Dataframe ===== */
-    .dataframe, [data-testid="stDataFrame"] {
-        background: rgba(255,255,255,0.03) !important;
-        color: #e0e0e0 !important;
-    }
-    .dataframe th, [data-testid="stDataFrame"] th {
-        background: rgba(102,126,234,0.2) !important;
-        color: #00d4ff !important;
-    }
-    .dataframe td, [data-testid="stDataFrame"] td {
-        color: #d0d0e8 !important;
-        border-bottom: 1px solid rgba(255,255,255,0.05) !important;
-    }
-
-    /* ===== 按钮 ===== */
-    .stButton > button {
-        background: linear-gradient(135deg, rgba(102,126,234,0.2), rgba(118,75,162,0.2)) !important;
-        border: 1px solid rgba(102,126,234,0.3) !important;
-        color: #e0e0f0 !important;
-        border-radius: 8px !important;
-        transition: all 0.3s !important;
-    }
-    .stButton > button:hover {
-        background: linear-gradient(135deg, #667eea, #764ba2) !important;
-        color: white !important;
-        box-shadow: 0 4px 15px rgba(102,126,234,0.3);
-    }
-
-    /* ===== radio 按钮 ===== */
-    .stRadio > div {
-        background: transparent !important;
-    }
-    .stRadio > div > label {
-        color: #c0c0e0 !important;
-    }
-    div[role="radiogroup"] > label {
-        color: #c0c0e0 !important;
-        background: rgba(255,255,255,0.03) !important;
-        border-radius: 6px !important;
-        padding: 0.3rem 0.8rem !important;
-    }
-
-    /* ===== 自定义组件 ===== */
-    .cyber-card {
-        background: linear-gradient(135deg, rgba(102,126,234,0.08), rgba(118,75,162,0.08)) !important;
-        border: 1px solid rgba(102,126,234,0.2) !important;
-        border-radius: 12px !important;
-        padding: 1.2rem !important;
-        margin: 0.5rem 0 !important;
-        backdrop-filter: blur(10px) !important;
-        transition: all 0.3s !important;
-        color: #e0e0f0 !important;
-    }
-    .cyber-card:hover {
-        border-color: rgba(0,212,255,0.4) !important;
-        box-shadow: 0 0 25px rgba(0,212,255,0.1) !important;
-        transform: translateY(-2px);
-    }
-    .cyber-card p { color: rgba(220, 220, 250, 0.85) !important; }
-    .cyber-card h4 { color: #b0b0ff !important; }
-
-    .legend-box {
-        background: rgba(0,0,0,0.3) !important;
-        border-left: 3px solid #00d4ff !important;
-        padding: 1rem 1.2rem !important;
-        border-radius: 0 8px 8px 0 !important;
-        margin: 0.8rem 0 !important;
-        color: #d0d0f0 !important;
-    }
-    .legend-box p { color: #d0d0f0 !important; }
-
-    .price-tag {
-        background: linear-gradient(135deg, #667eea, #764ba2) !important;
-        padding: 0.2rem 0.6rem !important;
-        border-radius: 1rem !important;
-        font-size: 0.8rem !important;
-        color: white !important;
-        font-weight: bold !important;
-        display: inline-block !important;
-        margin: 0.1rem !important;
-    }
-
-    /* ===== expander ===== */
-    .streamlit-expanderHeader {
-        color: #c0c0f0 !important;
-        background: rgba(102,126,234,0.08) !important;
-        border-radius: 8px !important;
-    }
-    .streamlit-expanderContent {
-        border: none !important;
-        background: transparent !important;
-    }
-
-    /* ===== 滚动条 ===== */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: rgba(10,14,39,0.5); }
-    ::-webkit-scrollbar-thumb { background: rgba(102,126,234,0.3); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(102,126,234,0.5); }
-
-    /* ===== info 提示框 ===== */
-    .stInfo { background: rgba(102,126,234,0.1) !important; }
-    .stInfo p { color: #c0c0f0 !important; }
-
-    /* ===== caption ===== */
-    .stCaption, caption, .caption {
-        color: rgba(180,180,220,0.6) !important;
-    }
-    /* ===== 动画效果 ===== */
-    /* 平滑缓动曲线 — 更自然的加减速 */
     :root {
         --ease-natural: cubic-bezier(0.25, 0.46, 0.45, 0.94);
         --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
         --ease-fade: cubic-bezier(0.4, 0, 0.2, 1);
+        --accent: #00d4ff;
+        --accent2: #667eea;
+        --accent3: #764ba2;
+        --accent4: #f093fb;
+        --bg-deep: #050714;
+        --bg-mid: #0a0e27;
+        --glass-bg: rgba(10, 14, 40, 0.6);
+        --glass-border: rgba(102, 126, 234, 0.2);
+        --text-primary: #f0f2ff;
+        --text-secondary: rgba(200, 205, 240, 0.8);
+        --text-muted: rgba(150, 155, 200, 0.5);
+        --card-radius: 20px;
+        --glow-sm: 0 0 15px rgba(0,212,255,0.1);
+        --glow-md: 0 8px 32px rgba(102,126,234,0.15);
+        --glow-lg: 0 12px 48px rgba(102,126,234,0.25);
+        --glow-accent: 0 0 30px rgba(0,212,255,0.2);
     }
 
+    /* ===== 全局根元素 + 动态渐变背景 ===== */
+    html, body, .stApp, .main, [data-testid="stAppViewContainer"] {
+        background: var(--bg-deep) !important;
+        color: var(--text-primary) !important;
+        font-family: 'Inter', 'Segoe UI', 'Microsoft YaHei', sans-serif !important;
+    }
+    [data-testid="stAppViewContainer"]::before {
+        content: '';
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background:
+            radial-gradient(ellipse 90% 70% at 15% 25%, rgba(102,126,234,0.15) 0%, transparent 60%),
+            radial-gradient(ellipse 70% 60% at 85% 75%, rgba(118,75,162,0.12) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 50% at 50% 50%, rgba(0,212,255,0.08) 0%, transparent 60%),
+            radial-gradient(ellipse 40% 40% at 70% 30%, rgba(240,147,251,0.06) 0%, transparent 50%),
+            linear-gradient(160deg, #050714 0%, #0a0e27 20%, #0f1435 40%, #0d1230 60%, #080b1e 80%, #040610 100%) !important;
+        z-index: -1 !important;
+        pointer-events: none !important;
+        animation: bgShift 25s ease infinite alternate;
+    }
+    @keyframes bgShift {
+        0% { opacity: 1; filter: hue-rotate(0deg); }
+        50% { opacity: 0.9; filter: hue-rotate(5deg); }
+        100% { opacity: 1; filter: hue-rotate(0deg); }
+    }
+
+    /* ===== 主内容容器 ===== */
+    .main .block-container {
+        padding-top: 2rem !important;
+        padding-bottom: 2.5rem !important;
+        padding-left: 3rem !important;
+        padding-right: 3rem !important;
+        max-width: 1440px !important;
+        background: transparent !important;
+        animation: fadeInUp 0.6s var(--ease-fade) !important;
+    }
+    [data-testid="stAppViewContainer"] > .main { background: transparent !important; }
+
+    /* ===== 全局文字 ===== */
+    p, li, span, div, label, .stMarkdown, .stText {
+        color: var(--text-primary) !important;
+        font-family: 'Inter', 'Microsoft YaHei', sans-serif !important;
+    }
+    p { color: var(--text-secondary) !important; line-height: 1.8; }
+
+    /* ===== 指标卡片 — 玻璃拟态 + 霓虹光效 ===== */
+    [data-testid="stMetric"] {
+        background: var(--glass-bg) !important;
+        border: 1px solid var(--glass-border) !important;
+        padding: 1.2rem 1.4rem !important;
+        border-radius: var(--card-radius) !important;
+        box-shadow: var(--glow-sm), inset 0 1px 0 rgba(255,255,255,0.05) !important;
+        backdrop-filter: blur(24px) !important;
+        -webkit-backdrop-filter: blur(24px) !important;
+        transition: all 0.45s var(--ease-natural) !important;
+        position: relative;
+        overflow: hidden;
+    }
+    [data-testid="stMetric"]::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), var(--accent4), transparent);
+        opacity: 0;
+        transition: opacity 0.4s;
+    }
+    [data-testid="stMetric"]::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(0,212,255,0.3), transparent);
+    }
+    [data-testid="stMetric"]:hover::before { opacity: 1; }
+    [data-testid="stMetric"]:hover {
+        transform: translateY(-4px) !important;
+        box-shadow: var(--glow-md), var(--glow-accent), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+        border-color: rgba(0,212,255,0.3) !important;
+    }
+    [data-testid="stMetric"] label {
+        color: var(--text-muted) !important;
+        font-size: 0.72rem !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+    }
+    [data-testid="stMetric"] [data-testid="stMetricValue"] {
+        color: var(--accent) !important;
+        font-size: 1.8rem !important;
+        font-weight: 800 !important;
+        text-shadow: 0 0 25px rgba(0,212,255,0.3);
+        letter-spacing: -0.02em;
+    }
+    [data-testid="stMetric"] [data-testid="stMetricDelta"] {
+        color: rgba(0,212,255,0.7) !important;
+        font-size: 0.82rem !important;
+        font-weight: 500;
+    }
+
+    /* ===== 侧边栏 — 玻璃面板 ===== */
+    section[data-testid="stSidebar"] {
+        background: rgba(5, 7, 20, 0.95) !important;
+        backdrop-filter: blur(40px) !important;
+        -webkit-backdrop-filter: blur(40px) !important;
+        border-right: 1px solid rgba(102,126,234,0.12) !important;
+        box-shadow: 4px 0 40px rgba(0,0,0,0.4) !important;
+    }
+    section[data-testid="stSidebar"] .stRadio label {
+        color: var(--text-secondary) !important;
+        font-size: 0.88rem !important;
+        font-weight: 500 !important;
+        padding: 0.6rem 0.9rem !important;
+        border-radius: 12px !important;
+        transition: all 0.35s var(--ease-natural) !important;
+        margin: 3px 0 !important;
+        position: relative !important;
+    }
+    section[data-testid="stSidebar"] .stRadio label::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 50%;
+        transform: translateY(-50%);
+        width: 3px; height: 0;
+        background: linear-gradient(180deg, var(--accent), var(--accent2), var(--accent4));
+        border-radius: 2px;
+        transition: height 0.35s var(--ease-natural);
+    }
+    section[data-testid="stSidebar"] .stRadio label:hover {
+        color: var(--accent) !important;
+        background: rgba(0,212,255,0.08) !important;
+    }
+    section[data-testid="stSidebar"] .stRadio label:hover::before,
+    section[data-testid="stSidebar"] .stRadio label[data-selected="true"]::before {
+        height: 60%;
+    }
+    section[data-testid="stSidebar"] [data-testid="stMarkdown"] h1 {
+        color: var(--accent) !important;
+        text-shadow: 0 0 40px rgba(0,212,255,0.2);
+    }
+    section[data-testid="stSidebar"] [data-testid="stMarkdown"] p {
+        color: var(--text-muted) !important;
+    }
+    section[data-testid="stSidebar"] hr {
+        border-color: rgba(102,126,234,0.1) !important;
+        margin: 0.8rem 0 !important;
+    }
+
+    /* ===== 表单控件 ===== */
+    .stSelectbox label, .stSlider label, .stMultiSelect label {
+        color: var(--text-secondary) !important;
+        font-weight: 500 !important;
+        font-size: 0.85rem !important;
+    }
+    .stSelectbox > div > div, .stMultiSelect > div > div {
+        background: rgba(10, 14, 40, 0.85) !important;
+        border: 1px solid var(--glass-border) !important;
+        color: var(--text-primary) !important;
+        border-radius: 12px !important;
+        transition: all 0.3s var(--ease-natural) !important;
+    }
+    .stSelectbox > div > div > div, .stMultiSelect > div > div > div {
+        color: var(--text-primary) !important;
+    }
+    .stSelectbox > div > div:hover, .stMultiSelect > div > div:hover {
+        border-color: rgba(0,212,255,0.4) !important;
+        box-shadow: 0 0 0 3px rgba(0,212,255,0.1), var(--glow-sm) !important;
+    }
+    div[data-baseweb="popover"] ul, div[data-baseweb="menu"] {
+        background: rgba(6, 9, 25, 0.98) !important;
+        border: 1px solid var(--glass-border) !important;
+        border-radius: 12px !important;
+        box-shadow: var(--glow-lg) !important;
+        backdrop-filter: blur(24px) !important;
+    }
+    div[data-baseweb="popover"] li, div[data-baseweb="menu"] li {
+        color: var(--text-primary) !important;
+        background: transparent !important;
+        padding: 0.6rem 1.1rem !important;
+        transition: all 0.2s !important;
+        border-radius: 6px !important;
+        margin: 2px 4px !important;
+    }
+    div[data-baseweb="popover"] li:hover, div[data-baseweb="menu"] li:hover {
+        background: rgba(102,126,234,0.18) !important;
+        color: var(--accent) !important;
+    }
+    div[data-baseweb="popover"] li[aria-selected="true"], div[data-baseweb="menu"] li[aria-selected="true"] {
+        background: rgba(102,126,234,0.25) !important;
+        color: var(--accent) !important;
+    }
+    .stMultiSelect [data-baseweb="tag"] {
+        background: rgba(102,126,234,0.25) !important;
+        color: var(--text-primary) !important;
+        border-radius: 8px !important;
+        border: 1px solid rgba(102,126,234,0.3) !important;
+    }
+    .stMultiSelect [data-baseweb="tag"] span { color: var(--text-primary) !important; }
+    .stMultiSelect [data-baseweb="tag"] svg { fill: var(--text-primary) !important; }
+    .stSelectbox svg, .stMultiSelect svg { fill: rgba(200, 200, 230, 0.5) !important; }
+    .stSlider > div > div { color: var(--accent) !important; }
+    div[data-baseweb="select"] > div {
+        background: rgba(10, 14, 40, 0.85) !important;
+        border-color: var(--glass-border) !important;
+    }
+    .stNumberInput input {
+        background: rgba(10, 14, 40, 0.85) !important;
+        color: var(--text-primary) !important;
+        border: 1px solid var(--glass-border) !important;
+        border-radius: 12px !important;
+    }
+
+    /* ===== 选项卡 — 玻璃分段控件 ===== */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 4px;
+        background: rgba(255,255,255,0.02);
+        border-radius: 16px;
+        padding: 5px;
+        border: 1px solid rgba(102,126,234,0.1);
+        backdrop-filter: blur(12px);
+    }
+    .stTabs [data-baseweb="tab"] {
+        padding: 10px 22px;
+        border-radius: 12px;
+        color: var(--text-muted) !important;
+        background: transparent;
+        transition: all 0.3s var(--ease-natural);
+        font-weight: 500;
+        border: none !important;
+        font-size: 0.88rem;
+    }
+    .stTabs [data-baseweb="tab"]:hover {
+        color: var(--text-primary) !important;
+        background: rgba(255,255,255,0.05) !important;
+    }
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, var(--accent2) 0%, var(--accent3) 50%, var(--accent4) 100%) !important;
+        color: white !important;
+        box-shadow: 0 6px 24px rgba(102,126,234,0.4);
+    }
+
+    /* ===== 标题 ===== */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Inter', 'Segoe UI', 'Microsoft YaHei', sans-serif !important;
+        color: var(--text-primary) !important;
+        letter-spacing: -0.02em !important;
+    }
+    h1 {
+        font-size: 2.4rem !important;
+        font-weight: 800 !important;
+        background: linear-gradient(135deg, #ffffff 0%, var(--accent) 30%, var(--accent2) 60%, var(--accent4) 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        margin-bottom: 0.3rem !important;
+        line-height: 1.15 !important;
+        text-shadow: none !important;
+    }
+    h2 {
+        border-bottom: 1px solid rgba(102,126,234,0.15);
+        padding-bottom: 0.7rem;
+        color: #d0d0f5 !important;
+        font-size: 1.4rem !important;
+        font-weight: 700 !important;
+        margin-top: 1.5rem !important;
+    }
+    h3 { color: #c0c0f0 !important; font-size: 1.2rem !important; font-weight: 700 !important; }
+    h4 { color: #b0b0e8 !important; font-weight: 600 !important; }
+
+    /* ===== 提示框 ===== */
+    .stAlert > div {
+        border-radius: 14px !important;
+        background: var(--glass-bg) !important;
+        border: 1px solid var(--glass-border) !important;
+        color: var(--text-secondary) !important;
+        backdrop-filter: blur(12px) !important;
+    }
+    .stAlert p { color: var(--text-secondary) !important; }
+
+    /* ===== Dataframe ===== */
+    [data-testid="stDataFrame"] {
+        background: rgba(255,255,255,0.02) !important;
+        border-radius: 14px !important;
+        overflow: hidden !important;
+        border: 1px solid rgba(102,126,234,0.12) !important;
+    }
+    .dataframe th, [data-testid="stDataFrame"] th {
+        background: rgba(102,126,234,0.18) !important;
+        color: var(--accent) !important;
+        font-weight: 700 !important;
+    }
+    .dataframe td, [data-testid="stDataFrame"] td {
+        color: var(--text-secondary) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.03) !important;
+    }
+
+    /* ===== 按钮 — 渐变玻璃 + 霓虹 ===== */
+    .stButton > button {
+        background: linear-gradient(135deg, rgba(102,126,234,0.2), rgba(118,75,162,0.2)) !important;
+        border: 1px solid rgba(102,126,234,0.3) !important;
+        color: var(--text-primary) !important;
+        border-radius: 12px !important;
+        padding: 0.55rem 1.6rem !important;
+        font-weight: 600 !important;
+        transition: all 0.35s var(--ease-spring) !important;
+        backdrop-filter: blur(12px) !important;
+        letter-spacing: 0.03em;
+        box-shadow: 0 2px 12px rgba(102,126,234,0.15);
+    }
+    .stButton > button:hover {
+        background: linear-gradient(135deg, var(--accent2), var(--accent3), var(--accent4)) !important;
+        color: white !important;
+        box-shadow: 0 8px 32px rgba(102,126,234,0.4), var(--glow-accent) !important;
+        transform: translateY(-3px) !important;
+        border-color: transparent !important;
+    }
+    .stButton > button:active {
+        transform: translateY(-1px) scale(0.98) !important;
+    }
+
+    /* ===== radio ===== */
+    .stRadio > div { background: transparent !important; }
+    .stRadio > div > label { color: var(--text-secondary) !important; }
+    div[role="radiogroup"] > label {
+        color: var(--text-secondary) !important;
+        background: rgba(255,255,255,0.02) !important;
+        border-radius: 10px !important;
+        padding: 0.4rem 0.9rem !important;
+        transition: all 0.3s !important;
+    }
+
+    /* ===== 核心卡片组件 — 玻璃拟态 + 霓虹边框 ===== */
+    .cyber-card {
+        background: var(--glass-bg) !important;
+        border: 1px solid var(--glass-border) !important;
+        border-radius: var(--card-radius) !important;
+        padding: 1.4rem !important;
+        margin: 0.6rem 0 !important;
+        backdrop-filter: blur(24px) !important;
+        -webkit-backdrop-filter: blur(24px) !important;
+        box-shadow: var(--glow-sm), inset 0 1px 0 rgba(255,255,255,0.04) !important;
+        transition: all 0.45s var(--ease-natural) !important;
+        color: var(--text-primary) !important;
+        position: relative;
+        overflow: hidden;
+    }
+    .cyber-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, var(--accent) 30%, var(--accent2) 60%, var(--accent4) 90%, transparent 100%);
+        opacity: 0.6;
+    }
+    .cyber-card::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 10%; right: 10%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(102,126,234,0.2), transparent);
+    }
+    .cyber-card:hover {
+        border-color: rgba(0,212,255,0.35) !important;
+        box-shadow: var(--glow-md), var(--glow-accent), inset 0 1px 0 rgba(255,255,255,0.06) !important;
+        transform: translateY(-4px);
+    }
+    .cyber-card p { color: var(--text-secondary) !important; }
+    .cyber-card h4 { color: #c8c8ff !important; }
+
+    .legend-box {
+        background: rgba(0,0,0,0.3) !important;
+        border-left: 3px solid var(--accent) !important;
+        padding: 1.1rem 1.4rem !important;
+        border-radius: 0 14px 14px 0 !important;
+        margin: 0.9rem 0 !important;
+        color: var(--text-secondary) !important;
+        backdrop-filter: blur(12px);
+        box-shadow: inset 0 0 20px rgba(0,212,255,0.05);
+    }
+    .legend-box p { color: var(--text-secondary) !important; }
+
+    .price-tag {
+        background: linear-gradient(135deg, var(--accent2), var(--accent3)) !important;
+        padding: 0.3rem 0.8rem !important;
+        border-radius: 24px !important;
+        font-size: 0.75rem !important;
+        color: white !important;
+        font-weight: 700 !important;
+        display: inline-block !important;
+        margin: 0.2rem !important;
+        box-shadow: 0 3px 12px rgba(102,126,234,0.4);
+        letter-spacing: 0.02em;
+    }
+
+    /* ===== expander ===== */
+    .streamlit-expanderHeader {
+        color: var(--text-secondary) !important;
+        background: rgba(102,126,234,0.08) !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(102,126,234,0.12) !important;
+        transition: all 0.3s !important;
+    }
+    .streamlit-expanderHeader:hover {
+        background: rgba(102,126,234,0.12) !important;
+        border-color: rgba(102,126,234,0.2) !important;
+    }
+    .streamlit-expanderContent { border: none !important; background: transparent !important; }
+
+    /* ===== 滚动条 ===== */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(102,126,234,0.3); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(102,126,234,0.5); }
+
+    /* ===== info ===== */
+    .stInfo { background: rgba(102,126,234,0.1) !important; }
+    .stInfo p { color: var(--text-secondary) !important; }
+
+    /* ===== caption ===== */
+    .stCaption, caption, .caption {
+        color: var(--text-muted) !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* ===== 动画 ===== */
     @keyframes fadeInUp {
-        0% { opacity: 0; transform: translateY(24px); }
+        0% { opacity: 0; transform: translateY(25px); }
         100% { opacity: 1; transform: translateY(0); }
     }
     @keyframes fadeIn {
@@ -349,155 +483,202 @@ st.markdown("""
         100% { opacity: 1; }
     }
     @keyframes glowPulse {
-        0% { box-shadow: 0 0 3px rgba(0,212,255,0.08); }
-        50% { box-shadow: 0 0 18px rgba(0,212,255,0.15); }
-        100% { box-shadow: 0 0 3px rgba(0,212,255,0.08); }
-    }
-    @keyframes shimmer {
-        0% { background-position: -200% 0; }
-        100% { background-position: 200% 0; }
+        0% { box-shadow: var(--glow-sm); }
+        50% { box-shadow: 0 0 25px rgba(0,212,255,0.15), var(--glow-sm); }
+        100% { box-shadow: var(--glow-sm); }
     }
     @keyframes float {
         0%, 100% { transform: translateY(0px); }
         50% { transform: translateY(-8px); }
     }
-    @keyframes breathe {
-        0%, 100% { opacity: 0.6; }
-        50% { opacity: 1; }
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+    @keyframes gradientFlow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    @keyframes borderGlow {
+        0%, 100% { border-color: rgba(102,126,234,0.2); }
+        50% { border-color: rgba(0,212,255,0.35); }
     }
 
-    /* 页面整体淡入 */
-    .main .block-container {
-        animation: fadeIn 0.4s var(--ease-fade) !important;
-    }
-
-    /* cyber-card 自然上浮 — 不强制每张卡都动画，保留transition */
-    .cyber-card {
-        transition: all 0.45s var(--ease-natural) !important;
-        will-change: transform, opacity !important;
-    }
-    .cyber-card:hover {
-        transform: translateY(-3px) !important;
-        border-color: rgba(0,212,255,0.35) !important;
-        box-shadow: 0 8px 30px rgba(0,212,255,0.08) !important;
-    }
-
-    /* 指标卡片 — 柔和光晕 */
+    .main .block-container { animation: fadeInUp 0.6s var(--ease-fade) !important; }
+    .cyber-card { will-change: transform !important; }
     [data-testid="stMetric"] {
-        transition: all 0.5s var(--ease-natural) !important;
+        animation: glowPulse 6s var(--ease-fade) infinite !important;
         will-change: box-shadow !important;
-        animation: glowPulse 4s var(--ease-fade) infinite !important;
     }
-    [data-testid="stMetric"]:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 8px 25px rgba(102,126,234,0.15) !important;
-    }
+    .legend-box { animation: fadeIn 0.6s var(--ease-fade) !important; }
+    .weather-icon { animation: float 5s var(--ease-natural) infinite !important; }
+    h1 { animation: fadeIn 0.7s var(--ease-fade) !important; }
+    div[data-testid="column"] { animation: fadeIn 0.6s var(--ease-fade) both !important; }
+    .stApp { transition: background 0.8s var(--ease-fade) !important; }
 
-    /* 图例框左滑 */
-    .legend-box {
-        animation: fadeIn 0.5s var(--ease-fade) !important;
-    }
-
-    /* 天气图标浮动 */
-    .weather-icon {
-        animation: float 4s var(--ease-natural) infinite !important;
-    }
-
-    /* h1 标题淡入 */
-    h1 {
-        animation: fadeIn 0.5s var(--ease-fade) !important;
-    }
-
-    /* 按钮 — 弹性反馈 */
-    .stButton > button {
-        transition: all 0.3s var(--ease-spring) !important;
-        will-change: transform !important;
-    }
-    .stButton > button:hover {
-        transform: scale(1.03) !important;
-        box-shadow: 0 0 25px rgba(102,126,234,0.25) !important;
-    }
-    .stButton > button:active {
-        transform: scale(0.97) !important;
-    }
-
-    /* 侧边栏导航 — 柔和高亮 */
-    section[data-testid="stSidebar"] .stRadio label {
-        transition: all 0.35s var(--ease-natural) !important;
-        position: relative !important;
-        padding-left: 0.8rem !important;
-    }
-    section[data-testid="stSidebar"] .stRadio label::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 3px;
-        height: 0;
-        background: #00d4ff;
-        border-radius: 2px;
-        transition: height 0.4s var(--ease-natural);
-    }
-    section[data-testid="stSidebar"] .stRadio label:hover::before,
-    section[data-testid="stSidebar"] .stRadio label[data-selected="true"]::before {
-        height: 60%;
-    }
-    section[data-testid="stSidebar"] .stRadio label:hover {
-        color: #00d4ff !important;
-        background: rgba(0,212,255,0.05) !important;
-        border-radius: 4px !important;
-    }
-
-    /* 列容器 — 依次自然淡入 */
-    div[data-testid="column"] {
-        animation: fadeIn 0.5s var(--ease-fade) both !important;
-    }
-
-    /* 选项卡 — 平滑切换 */
-    .stTabs [data-baseweb="tab"] {
-        transition: all 0.3s var(--ease-natural) !important;
-    }
-    .stTabs [aria-selected="true"] {
-        transition: all 0.3s var(--ease-spring) !important;
-    }
-
-    /* 下拉框 — 柔和展开 */
-    div[data-baseweb="select"] > div {
-        transition: border-color 0.3s var(--ease-natural) !important;
-    }
-
-    /* 滑块 */
-    .stSlider > div > div {
-        transition: all 0.25s var(--ease-natural) !important;
-    }
-
-    /* 页面切换时的全局过渡 */
-    .stApp {
-        transition: background 0.6s var(--ease-fade) !important;
-    }
-
-    /* 信息提示框 */
-    .stAlert > div {
-        transition: all 0.4s var(--ease-natural) !important;
-    }
-
-    /* ===== 代码块（行程导出） ===== */
+    /* ===== 代码块 ===== */
     .stCodeBlock, .stCodeBlock pre, code, .stCode {
-        background: rgba(10, 14, 39, 0.95) !important;
-        color: #e0e0f0 !important;
-        border: 1px solid rgba(102,126,234,0.2) !important;
-        border-radius: 8px !important;
+        background: rgba(5, 7, 20, 0.95) !important;
+        color: var(--text-primary) !important;
+        border: 1px solid rgba(102,126,234,0.18) !important;
+        border-radius: 12px !important;
         font-size: 0.85rem !important;
         line-height: 1.6 !important;
     }
-    .stCodeBlock code {
-        color: #e0e0f0 !important;
-        background: transparent !important;
+    .stCodeBlock code { color: var(--text-primary) !important; background: transparent !important; }
+    .stCodeBlock pre * { color: var(--text-primary) !important; }
+
+    /* ===== Hero Banner ===== */
+    .hero-banner {
+        position: relative;
+        padding: 2rem 2.5rem;
+        margin-bottom: 1.8rem;
+        border-radius: 24px;
+        overflow: hidden;
+        background: linear-gradient(135deg, rgba(102,126,234,0.15) 0%, rgba(118,75,162,0.1) 40%, rgba(240,147,251,0.08) 100%);
+        border: 1px solid rgba(102,126,234,0.2);
+        backdrop-filter: blur(24px);
+        box-shadow: var(--glow-md), inset 0 1px 0 rgba(255,255,255,0.05);
     }
-    /* 代码块内部文字强制可见 */
-    .stCodeBlock pre * {
-        color: #e0e0f0 !important;
+    .hero-banner::before {
+        content: '';
+        position: absolute;
+        top: -50%; left: -50%;
+        width: 200%; height: 200%;
+        background: radial-gradient(circle at 25% 35%, rgba(0,212,255,0.08) 0%, transparent 45%),
+                    radial-gradient(circle at 75% 65%, rgba(240,147,251,0.08) 0%, transparent 45%),
+                    radial-gradient(circle at 50% 50%, rgba(102,126,234,0.05) 0%, transparent 50%);
+        animation: gradientFlow 10s ease infinite;
+        background-size: 200% 200%;
+    }
+    .hero-banner::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), var(--accent4), transparent);
+    }
+    .hero-banner h1 {
+        position: relative;
+        z-index: 1;
+        font-size: 2.2rem !important;
+        margin-bottom: 0.4rem !important;
+    }
+    .hero-banner p {
+        position: relative;
+        z-index: 1;
+        color: var(--text-muted) !important;
+        font-size: 0.95rem !important;
+        margin: 0 !important;
+        font-weight: 400;
+    }
+    .hero-icon {
+        position: absolute;
+        right: 2.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 4rem;
+        opacity: 0.12;
+        z-index: 0;
+        filter: blur(1px);
+    }
+
+    /* ===== 装饰分隔线 ===== */
+    .divider-glow {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(102,126,234,0.3), rgba(0,212,255,0.3), rgba(240,147,251,0.3), transparent);
+        margin: 1.5rem 0;
+        border: none;
+    }
+
+    /* ===== 页脚 ===== */
+    .app-footer {
+        text-align: center;
+        padding: 2rem 0 0.5rem 0;
+        margin-top: 2.5rem;
+        border-top: 1px solid rgba(102,126,234,0.1);
+        color: var(--text-muted) !important;
+        font-size: 0.75rem !important;
+        position: relative;
+    }
+    .app-footer::before {
+        content: '';
+        position: absolute;
+        top: -1px; left: 20%; right: 20%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(0,212,255,0.3), transparent);
+    }
+
+    /* ===== 特色卡片样式 ===== */
+    .feature-card {
+        background: linear-gradient(135deg, rgba(102,126,234,0.08), rgba(118,75,162,0.06)) !important;
+        border: 1px solid rgba(102,126,234,0.15) !important;
+        border-radius: 18px !important;
+        padding: 1.5rem !important;
+        margin: 0.8rem 0 !important;
+        backdrop-filter: blur(20px) !important;
+        transition: all 0.4s var(--ease-natural) !important;
+        position: relative;
+        overflow: hidden;
+    }
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        width: 4px; height: 100%;
+        background: linear-gradient(180deg, var(--accent), var(--accent2), var(--accent4));
+        border-radius: 4px 0 0 4px;
+    }
+    .feature-card:hover {
+        transform: translateX(4px) !important;
+        border-color: rgba(0,212,255,0.3) !important;
+        box-shadow: var(--glow-md) !important;
+    }
+
+    /* ===== 统计数字样式 ===== */
+    .stat-number {
+        font-size: 2rem !important;
+        font-weight: 800 !important;
+        background: linear-gradient(135deg, var(--accent), var(--accent2)) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        letter-spacing: -0.03em;
+    }
+
+    /* ===== 标签样式 ===== */
+    .tag-accent {
+        background: rgba(0,212,255,0.12) !important;
+        border: 1px solid rgba(0,212,255,0.25) !important;
+        color: var(--accent) !important;
+        padding: 0.25rem 0.7rem !important;
+        border-radius: 20px !important;
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        display: inline-block !important;
+    }
+
+    .tag-purple {
+        background: rgba(118,75,162,0.15) !important;
+        border: 1px solid rgba(118,75,162,0.3) !important;
+        color: #b8a9d4 !important;
+        padding: 0.25rem 0.7rem !important;
+        border-radius: 20px !important;
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        display: inline-block !important;
+    }
+
+    .tag-pink {
+        background: rgba(240,147,251,0.12) !important;
+        border: 1px solid rgba(240,147,251,0.25) !important;
+        color: #e8b4f8 !important;
+        padding: 0.25rem 0.7rem !important;
+        border-radius: 20px !important;
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        display: inline-block !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -547,12 +728,20 @@ attractions, hotels, food, transport, links, weather, district_summary, routes =
 today_weather = get_today_weather()
 
 # ========== 侧边栏 ==========
-st.sidebar.markdown("<h1 style='text-align:center;'>🌐 温州智旅</h1>", unsafe_allow_html=True)
-st.sidebar.markdown("<p style='text-align:center;font-size:0.85rem;'>未来旅游数据平台 v2.0</p>", unsafe_allow_html=True)
-st.sidebar.markdown("<hr style='border-color:rgba(102,126,234,0.2);'>", unsafe_allow_html=True)
+st.sidebar.markdown("""
+<div style='text-align:center;padding:0.8rem 0 0.3rem 0;'>
+    <div style='font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,#00d4ff,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.02em;'>
+        🌐 温州智旅
+    </div>
+    <div style='font-size:0.75rem;color:rgba(170,175,220,0.5);margin-top:0.2rem;letter-spacing:2px;text-transform:uppercase;'>
+        WENZHOU SMART TRAVEL
+    </div>
+</div>
+""", unsafe_allow_html=True)
+st.sidebar.markdown("<hr style='border-color:rgba(102,126,234,0.08);margin:0.5rem 0;'>", unsafe_allow_html=True)
 
 page = st.sidebar.radio(
-    "**导航菜单**",
+    "导航",
     [
         "📊 数据总览",
         "🌤️ 今日出行指南",
@@ -566,13 +755,16 @@ page = st.sidebar.radio(
     ]
 )
 
-st.sidebar.markdown("<hr style='border-color:rgba(102,126,234,0.2);'>", unsafe_allow_html=True)
+st.sidebar.markdown("<hr style='border-color:rgba(102,126,234,0.08);margin:0.5rem 0;'>", unsafe_allow_html=True)
 
-# 侧边栏底部天气
 st.sidebar.markdown(f"""
-<div style='text-align:center;font-size:0.8rem;padding:0.5rem;background:rgba(102,126,234,0.1);border-radius:8px;'>
-    <div style='color:#00d4ff;'>🌤️ 温州实时</div>
-    <div style='color:rgba(255,255,255,0.7);'>{today_weather.get('condition','N/A')} {today_weather.get('temp','N/A')}°C</div>
+<div style='text-align:center;font-size:0.8rem;padding:0.7rem;
+    background:rgba(12,16,48,0.5);border-radius:12px;
+    border:1px solid rgba(102,126,234,0.12);backdrop-filter:blur(10px);'>
+    <div style='color:rgba(0,212,255,0.8);font-size:0.75rem;letter-spacing:1px;margin-bottom:0.3rem;'>WEATHER</div>
+    <div style='font-size:1.4rem;'>{'☀️' if '晴' in today_weather.get('condition','') else '🌧️' if '雨' in today_weather.get('condition','') else '⛅'}</div>
+    <div style='color:rgba(255,255,255,0.8);font-size:1.1rem;font-weight:600;margin:0.2rem 0;'>{today_weather.get('temp','N/A')}°C</div>
+    <div style='color:rgba(170,175,220,0.5);font-size:0.78rem;'>{today_weather.get('condition','N/A')} · 湿度{today_weather.get('humidity','N/A')}%</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -627,32 +819,31 @@ def show_detail_page(selected_attraction):
         routes_internal = detail.get("internal_routes", [])
         if routes_internal:
             st.markdown("""
-            <div class="cyber-card">
-                <h4>🗺️ 景区内推荐游览路线</h4>
+            <div class="cyber-card" style="border-top:2px solid rgba(0,212,255,0.4);">
+                <h4 style="margin:0 0 0.8rem 0;color:#c8c8ff;">🗺️ 景区内推荐游览路线</h4>
             </div>
             """, unsafe_allow_html=True)
             for i, route in enumerate(routes_internal):
-                colors = ["#00d4ff", "#667eea", "#764ba2", "#fd79a8", "#00b894"]
+                colors = ["#00d4ff", "#667eea", "#764ba2", "#f093fb", "#00b894"]
                 c = colors[i % len(colors)]
                 st.markdown(f"""
-                <div style="display:flex;align-items:stretch;margin:0.6rem 0;gap:0;">
-                    <div style="min-width:40px;background:{c};border-radius:8px 0 0 8px;
-                                display:flex;align-items:center;justify-content:center;
-                                font-weight:bold;color:white;font-size:0.9rem;">
-                        {i+1}
+                <div class="feature-card" style="padding:1.2rem 1.2rem 1.2rem 1.8rem;margin:0.8rem 0;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;">
+                        <div style="display:flex;align-items:center;gap:0.8rem;">
+                            <div style="min-width:36px;height:36px;background:linear-gradient(135deg,{c},{c}88);border-radius:10px;
+                                        display:flex;align-items:center;justify-content:center;
+                                        font-weight:800;color:white;font-size:0.95rem;
+                                        box-shadow:0 4px 12px {c}44;">{i+1}</div>
+                            <strong style="color:{c};font-size:1.05rem;font-weight:700;">{route['title']}</strong>
+                        </div>
+                        <span class="tag-accent" style="background:rgba(0,212,255,0.1);border-color:rgba(0,212,255,0.2);color:#00d4ff;"> {route['duration']}</span>
                     </div>
-                    <div style="flex:1;background:rgba(255,255,255,0.03);border-radius:0 8px 8px 0;
-                                padding:0.7rem 1rem;border:1px solid rgba(255,255,255,0.05);">
-                        <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <strong style="color:{c};">{route['title']}</strong>
-                            <span style="font-size:0.8rem;color:rgba(255,255,255,0.4);">⏱ {route['duration']}</span>
-                        </div>
-                        <div style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin:0.2rem 0;">
-                            📍 {route['spots']}
-                        </div>
-                        <div style="font-size:0.85rem;color:rgba(255,255,255,0.7);line-height:1.5;">
-                            {route['desc']}
-                        </div>
+                    <div style="font-size:0.85rem;color:rgba(200,205,240,0.6);margin:0.4rem 0 0.6rem 0;display:flex;align-items:center;gap:0.5rem;">
+                        <span style="color:{c};">📍</span> {route['spots']}
+                    </div>
+                    <div style="font-size:0.88rem;color:rgba(200,205,240,0.75);line-height:1.7;padding-left:2.8rem;
+                                border-left:2px solid {c}33;margin-left:0.5rem;">
+                        {route['desc']}
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
@@ -845,8 +1036,13 @@ def show_hotel_detail_page(selected_hotel):
 # ==================== 页面路由 ====================
 
 if page == "📊 数据总览":
-    st.markdown("<h1>📊 温州旅游数据总览</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:rgba(255,255,255,0.5);'>温州 · 一座充满活力的山水之城</p>", unsafe_allow_html=True)
+    st.markdown("""
+    <div class="hero-banner">
+        <h1>📊 温州旅游数据总览</h1>
+        <p>温州 · 一座充满活力的山水之城 · 探索无限可能</p>
+        <div class="hero-icon">📊</div>
+    </div>
+    """, unsafe_allow_html=True)
     
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("景点总数", f"{len(attractions)} 个", "18个景区")
@@ -860,40 +1056,55 @@ if page == "📊 数据总览":
     col3.metric("本月旅游指数", f"{weather[weather['month']==datetime.now().month]['tourism_index'].values[0]}", "100满分")
     col4.metric("今日天气", f"{today_weather.get('temp','N/A')}°C", today_weather.get('condition','N/A'))
     
-    st.markdown("<h2 style='margin-top:1.5rem;'>🌤️ 今日温州</h2>", unsafe_allow_html=True)
+    st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
+    st.markdown("<h2>🌤️ 今日温州</h2>", unsafe_allow_html=True)
     col1, col2, col3, col4 = st.columns(4)
-    for c, (label, val) in zip([col1,col2,col3,col4], [
-        ("天气状况", today_weather.get('condition','N/A')),
-        ("温度", f"{today_weather.get('temp','N/A')}°C"),
-        ("体感温度", f"{today_weather.get('feels_like','N/A')}°C"),
-        ("湿度", f"{today_weather.get('humidity','N/A')}%")
+    for c, (label, val, icon) in zip([col1,col2,col3,col4], [
+        ("天气状况", today_weather.get('condition','N/A'), "🌤️"),
+        ("温度", f"{today_weather.get('temp','N/A')}°C", "🌡️"),
+        ("体感温度", f"{today_weather.get('feels_like','N/A')}°C", "🤗"),
+        ("湿度", f"{today_weather.get('humidity','N/A')}%", "💧")
     ]):
         c.markdown(f"""
-        <div class='cyber-card' style='text-align:center;'>
-            <div style='font-size:0.8rem;color:rgba(255,255,255,0.5);'>{label}</div>
-            <div style='font-size:1.5rem;font-weight:bold;color:#00d4ff;'>{val}</div>
+        <div class='cyber-card' style='text-align:center;padding:1rem;'>
+            <div style='font-size:1.5rem;margin-bottom:0.3rem;'>{icon}</div>
+            <div style='font-size:0.72rem;color:rgba(170,175,220,0.5);text-transform:uppercase;letter-spacing:1px;'>{label}</div>
+            <div style='font-size:1.4rem;font-weight:700;color:#00d4ff;margin-top:0.2rem;'>{val}</div>
         </div>
         """, unsafe_allow_html=True)
     
-    st.markdown("<h2 style='margin-top:1.5rem;'>🗺️ 温州景点地图</h2>", unsafe_allow_html=True)
+    st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
+    st.markdown("<h2>🗺️ 温州景点地图</h2>", unsafe_allow_html=True)
     map_data = attractions[["lat", "lng"]].rename(columns={"lng": "lon"})
     st.map(map_data, zoom=7.5, use_container_width=True, height=500)
     st.caption("💡 圆点位置=景点 · 通过缩放查看更多细节")
 
 elif page == "🌤️ 今日出行指南":
-    st.markdown("<h1>🌤️ 今日出行指南</h1>", unsafe_allow_html=True)
+    st.markdown("""
+    <div class="hero-banner">
+        <h1>️ 今日出行指南</h1>
+        <p>实时天气 · 拥挤度 · 出行建议 · 智能推荐</p>
+        <div class="hero-icon">🌤️</div>
+    </div>
+    """, unsafe_allow_html=True)
     st.info(f"📅 {datetime.now().strftime('%Y年%m月%d日 %A')}")
     
     # 天气大卡片
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown(f"""
-        <div class='cyber-card' style='text-align:center;padding:2rem;background:linear-gradient(135deg,rgba(0,119,255,0.15),rgba(102,126,234,0.15));'>
-            <div style='font-size:4rem;'>{'☀️' if '晴' in today_weather.get('condition','') or 'Clear' in today_weather.get('condition','') else '🌧️' if '雨' in today_weather.get('condition','') or 'rain' in today_weather.get('condition','') else '⛅'}</div>
-            <div style='font-size:2.5rem;font-weight:bold;color:#00d4ff;text-shadow:0 0 20px rgba(0,212,255,0.3);'>{today_weather.get('temp','N/A')}°C</div>
+        <div class='cyber-card' style='text-align:center;padding:2rem;
+            background:linear-gradient(135deg,rgba(0,119,255,0.12),rgba(102,126,234,0.12));
+            border-top:2px solid rgba(0,212,255,0.3);'>
+            <div class='weather-icon' style='font-size:4rem;'>{'☀️' if '晴' in today_weather.get('condition','') or 'Clear' in today_weather.get('condition','') else '🌧️' if '雨' in today_weather.get('condition','') or 'rain' in today_weather.get('condition','') else '⛅'}</div>
+            <div style='font-size:2.8rem;font-weight:700;color:#00d4ff;text-shadow:0 0 30px rgba(0,212,255,0.25);margin:0.3rem 0;'>{today_weather.get('temp','N/A')}°C</div>
             <div style='font-size:1rem;color:rgba(255,255,255,0.7);'>{today_weather.get('condition','N/A')}</div>
-            <div style='font-size:0.8rem;color:rgba(255,255,255,0.4);margin-top:0.5rem;'>
-                体感{today_weather.get('feels_like','N/A')}°C · 湿度{today_weather.get('humidity','N/A')}% · 风速{today_weather.get('wind_speed','N/A')}km/h
+            <div style='display:flex;gap:1rem;justify-content:center;margin-top:0.8rem;font-size:0.8rem;color:rgba(255,255,255,0.4);'>
+                <span>体感 {today_weather.get('feels_like','N/A')}°C</span>
+                <span>·</span>
+                <span>湿度 {today_weather.get('humidity','N/A')}%</span>
+                <span>·</span>
+                <span>风速 {today_weather.get('wind_speed','N/A')}km/h</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -906,21 +1117,22 @@ elif page == "🌤️ 今日出行指南":
         advice = "🌧️ 今日有雨，建议游览室内景点（江心屿、刘伯温故里、泰顺廊桥、温州博物馆）" if is_rain else "☀️ 晴好天气！推荐前往自然风光景点（雁荡山、楠溪江、大罗山）"
         
         st.markdown(f"""
-        <div class='cyber-card' style='height:100%;'>
-            <h4 style='margin-top:0;'>🎯 今日出行建议</h4>
-            <p style='font-size:1.05rem;line-height:1.8;'>{advice}</p>
-            <div style='margin-top:1rem;'>
-                <span style='background:rgba(0,212,255,0.15);padding:0.3rem 0.8rem;border-radius:1rem;margin-right:0.5rem;font-size:0.85rem;'>
+        <div class='cyber-card' style='height:100%;border-left:3px solid rgba(0,212,255,0.4);'>
+            <h4 style='margin-top:0;color:#c0c0ff;'>🎯 今日出行建议</h4>
+            <p style='font-size:1rem;line-height:1.8;'>{advice}</p>
+            <div style='margin-top:1rem;display:flex;gap:0.5rem;flex-wrap:wrap;'>
+                <span style='background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);padding:0.3rem 0.8rem;border-radius:20px;font-size:0.82rem;'>
                     户外活动: {outdoor}
                 </span>
-                <span style='background:rgba(255,255,255,0.05);padding:0.3rem 0.8rem;border-radius:1rem;font-size:0.85rem;'>
+                <span style='background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);padding:0.3rem 0.8rem;border-radius:20px;font-size:0.82rem;'>
                     室内活动: 均可
                 </span>
             </div>
         </div>
         """, unsafe_allow_html=True)
     
-    st.markdown("<h2 style='margin-top:1rem;'>🚶 景点拥挤度 · 今日实时</h2>", unsafe_allow_html=True)
+    st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
+    st.markdown("<h2>🚶 景点拥挤度 · 今日实时</h2>", unsafe_allow_html=True)
     congested = get_today_congestion()
     
     col1, col2 = st.columns(2)
@@ -931,7 +1143,7 @@ elif page == "🌤️ 今日出行指南":
             st.markdown(f"""
             <div class='cyber-card' style='padding:0.6rem 1rem;border-left:3px solid #ff6b6b;'>
                 <strong>{r['congestion_label']}</strong> {r['name']}
-                <span style='float:right;color:rgba(255,255,255,0.5);font-size:0.85rem;'>⭐{r['rating']}</span>
+                <span style='float:right;color:rgba(170,175,220,0.5);font-size:0.82rem;'>⭐{r['rating']}</span>
             </div>
             """, unsafe_allow_html=True)
     
@@ -942,27 +1154,33 @@ elif page == "🌤️ 今日出行指南":
             st.markdown(f"""
             <div class='cyber-card' style='padding:0.6rem 1rem;border-left:3px solid #00d4ff;'>
                 <strong>{r['congestion_label']}</strong> {r['name']}
-                <span style='float:right;color:rgba(255,255,255,0.5);font-size:0.85rem;'>⭐{r['rating']}</span>
+                <span style='float:right;color:rgba(170,175,220,0.5);font-size:0.82rem;'>⭐{r['rating']}</span>
             </div>
             """, unsafe_allow_html=True)
     
-    st.markdown("<h2 style='margin-top:1rem;'>🏨 今日高性价比酒店 TOP 8</h2>", unsafe_allow_html=True)
+    st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
+    st.markdown("<h2>🏨 今日高性价比酒店 TOP 8</h2>", unsafe_allow_html=True)
     hotels_today = get_today_hotel_prices().head(8)
     cols = st.columns(4)
     for i, (_, r) in enumerate(hotels_today.iterrows()):
         with cols[i % 4]:
             st.markdown(f"""
             <div class='cyber-card' style='text-align:center;padding:1rem;'>
-                <div style='font-size:0.85rem;color:#00d4ff;font-weight:bold;'>{r['name'][:8]}</div>
-                <div style='font-size:0.75rem;color:rgba(255,255,255,0.4);'>{r['district']}</div>
-                <div style='font-size:1.3rem;font-weight:bold;color:#ff6b6b;margin:0.3rem 0;'>¥{r['today_price']}</div>
-                <div style='font-size:0.8rem;'>⭐{r['rating']} · 性价比{r['today_cost_performance']:.3f}</div>
+                <div style='font-size:0.82rem;color:#00d4ff;font-weight:600;'>{r['name'][:8]}</div>
+                <div style='font-size:0.7rem;color:rgba(170,175,220,0.5);margin:0.2rem 0;'>{r['district']}</div>
+                <div style='font-size:1.4rem;font-weight:700;color:#ff6b6b;margin:0.3rem 0;'>¥{r['today_price']}</div>
+                <div style='font-size:0.75rem;color:rgba(210,215,250,0.6);'>⭐{r['rating']} · 💎{r['today_cost_performance']:.3f}</div>
             </div>
             """, unsafe_allow_html=True)
 
 elif page == "🤖 智能行程规划":
-    st.markdown("<h1>🤖 智能行程规划</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:rgba(255,255,255,0.5);'>根据你的预算、天数和偏好，智能规划最优温州旅行方案</p>", unsafe_allow_html=True)
+    st.markdown("""
+    <div class="hero-banner">
+        <h1>🤖 智能行程规划</h1>
+        <p>根据你的预算、天数和偏好，智能规划最优温州旅行方案</p>
+        <div class="hero-icon">🤖</div>
+    </div>
+    """, unsafe_allow_html=True)
     
     # 输入面板
     col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
@@ -1091,6 +1309,7 @@ elif page == "🤖 智能行程规划":
                     """, unsafe_allow_html=True)
         
         # 景点匹配分排行
+        st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
         st.markdown("<h2>🏆 景点匹配度排行</h2>", unsafe_allow_html=True)
         selected_names = set()
         for day in plans:
@@ -1111,6 +1330,7 @@ elif page == "🤖 智能行程规划":
         st.plotly_chart(fig, use_container_width=True)
         
         # 行程地图
+        st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
         st.markdown("<h2>🗺️ 行程路线地图</h2>", unsafe_allow_html=True)
         map_points = []
         for day in plans:
@@ -1125,6 +1345,7 @@ elif page == "🤖 智能行程规划":
             st.map(map_df.rename(columns={"lon": "lon"}), zoom=8, use_container_width=True, height=400)
         
         # 淡旺季对比
+        st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
         st.markdown("<h2>📊 淡旺季价格对比</h2>", unsafe_allow_html=True)
         col1, col2 = st.columns([1, 1])
         with col1:
@@ -1160,7 +1381,8 @@ elif page == "🤖 智能行程规划":
         st.plotly_chart(fig, use_container_width=True)
         
         # 导出
-        st.markdown("<h2>📄 导出行程</h2>", unsafe_allow_html=True)
+        st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
+        st.markdown("<h2> 导出行程</h2>", unsafe_allow_html=True)
         col1, col2 = st.columns([1, 3])
         with col1:
             if st.button("📋 复制行程文本"):
@@ -1185,7 +1407,13 @@ elif page == "🤖 智能行程规划":
         """, unsafe_allow_html=True)
 
 elif page == "🏞️ 景点探索":
-    st.markdown("<h1>🏞️ 景点探索</h1>", unsafe_allow_html=True)
+    st.markdown("""
+    <div class="hero-banner">
+        <h1>🏞️ 景点探索</h1>
+        <p>发现温州最美风景 · 传说故事 · 实用攻略</p>
+        <div class="hero-icon">🏞️</div>
+    </div>
+    """, unsafe_allow_html=True)
     
     # 用户定位
     import streamlit.components.v1 as components
@@ -1279,7 +1507,7 @@ elif page == "🏞️ 景点探索":
                 st.warning(f"当前筛选条件下未包含'{selected}'，请调整筛选条件")
     
     # 景点总览图表
-    st.markdown("<hr style='border-color:rgba(102,126,234,0.2);'>", unsafe_allow_html=True)
+    st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
     st.markdown("<h2>📊 景点总览分析</h2>", unsafe_allow_html=True)
     tab1, tab2, tab3 = st.tabs(["评分排行", "热度排行", "最佳月份"])
     
@@ -1298,7 +1526,13 @@ elif page == "🏞️ 景点探索":
         st.caption("💡 绿色=该月推荐 · 春秋季(3-5月,9-11月)是温州旅游黄金季节")
 
 elif page == "🏨 酒店性价比":
-    st.markdown("<h1>🏨 酒店性价比分析</h1>", unsafe_allow_html=True)
+    st.markdown("""
+    <div class="hero-banner">
+        <h1>🏨 酒店性价比分析</h1>
+        <p>价格对比 · 评分排行 · 区域分析</p>
+        <div class="hero-icon">🏨</div>
+    </div>
+    """, unsafe_allow_html=True)
     
     st.markdown("<h3>选择酒店查看价格对比</h3>", unsafe_allow_html=True)
     cols = st.columns([2, 1, 1])
@@ -1317,7 +1551,7 @@ elif page == "🏨 酒店性价比":
     if hotel_selected and (show_hotel or hotel_selected in filtered_hotels["name"].values):
         show_hotel_detail_page(hotel_selected)
     
-    st.markdown("<hr style='border-color:rgba(102,126,234,0.2);'>", unsafe_allow_html=True)
+    st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
     st.markdown("<h2>📊 酒店数据总览</h2>", unsafe_allow_html=True)
     
     tab1, tab2, tab3 = st.tabs(["💎 性价比排行", "📈 价格分析", "🏙️ 区域对比"])
@@ -1347,8 +1581,13 @@ elif page == "🏨 酒店性价比":
             st.plotly_chart(fig, use_container_width=True)
 
 elif page == "🔗 游住联动推荐":
-    st.markdown("<h1>🔗 景点-酒店联动推荐</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:rgba(255,255,255,0.5);'>选择想去的目的地，智能推荐附近高性价比酒店</p>", unsafe_allow_html=True)
+    st.markdown("""
+    <div class="hero-banner">
+        <h1>🔗 景点-酒店联动推荐</h1>
+        <p>选择想去的目的地，智能推荐附近高性价比酒店</p>
+        <div class="hero-icon">🔗</div>
+    </div>
+    """, unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1, 1, 1])
     with col1:
@@ -1400,7 +1639,7 @@ elif page == "🔗 游住联动推荐":
             </div>
             """, unsafe_allow_html=True)
     
-    st.markdown("<hr style='border-color:rgba(102,126,234,0.2);'>", unsafe_allow_html=True)
+    st.markdown("<hr class='divider-glow'>", unsafe_allow_html=True)
     st.markdown("<h2>🏆 区域综合性价比</h2>", unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
@@ -1413,7 +1652,13 @@ elif page == "🔗 游住联动推荐":
         st.plotly_chart(fig, use_container_width=True)
 
 elif page == "🗺️ 路线规划":
-    st.markdown("<h1>🗺️ 旅游路线规划</h1>", unsafe_allow_html=True)
+    st.markdown("""
+    <div class="hero-banner">
+        <h1>🗺️ 旅游路线规划</h1>
+        <p>精选路线 · 天气联动 · 预算方案</p>
+        <div class="hero-icon">🗺️</div>
+    </div>
+    """, unsafe_allow_html=True)
     
     # 天气联动推荐
     condition = today_weather.get("condition", "")
@@ -1440,14 +1685,14 @@ elif page == "🗺️ 路线规划":
         weather_route_desc = "雁荡山、江心屿、南麂列岛、温州乐园"
     
     st.markdown(f"""
-    <div class="cyber-card" style="background:linear-gradient(135deg,rgba(0,119,255,0.12),rgba(102,126,234,0.12));
-                border-left:4px solid #00d4ff;">
+    <div class="cyber-card" style="background:linear-gradient(135deg,rgba(0,119,255,0.1),rgba(102,126,234,0.1));
+                border-left:4px solid #00d4ff;border-top:1px solid rgba(0,212,255,0.15);">
         <div style="display:flex;justify-content:space-between;align-items:center;">
             <div>
                 <h4 style="margin:0;color:#00d4ff;">🎯 {weather_route}</h4>
-                <p style="margin:0.3rem 0 0 0;font-size:0.9rem;color:rgba(255,255,255,0.7);">{weather_route_desc}</p>
+                <p style="margin:0.3rem 0 0 0;font-size:0.88rem;color:rgba(210,215,250,0.65);">{weather_route_desc}</p>
             </div>
-            <div style="font-size:2rem;">{'🌧️' if is_rain else '☀️' if is_clear else '⛅'}</div>
+            <div style="font-size:2.5rem;opacity:0.3;">{'🌧️' if is_rain else '☀️' if is_clear else '⛅'}</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -1508,15 +1753,21 @@ elif page == "🗺️ 路线规划":
             ]
         ):
             c.markdown(f"""
-            <div class='cyber-card' style='text-align:center;border-top:3px solid {color};'>
-                <div style='font-size:1.3rem;font-weight:bold;color:{color};'>{title}</div>
-                <div style='font-size:0.9rem;margin:0.5rem 0;color:rgba(255,255,255,0.6);'>{price}</div>
-                <div style='font-size:0.85rem;'>{desc}</div>
+            <div class='cyber-card' style='text-align:center;border-top:2px solid {color};'>
+                <div style='font-size:1.2rem;font-weight:700;color:{color};'>{title}</div>
+                <div style='font-size:0.85rem;margin:0.5rem 0;color:rgba(210,215,250,0.6);'>{price}</div>
+                <div style='font-size:0.82rem;color:rgba(210,215,250,0.5);line-height:1.6;'>{desc}</div>
             </div>
             """, unsafe_allow_html=True)
 
 elif page == "📅 最佳旅行时间":
-    st.markdown("<h1>📅 最佳旅行时间</h1>", unsafe_allow_html=True)
+    st.markdown("""
+    <div class="hero-banner">
+        <h1>📅 最佳旅行时间</h1>
+        <p>气候分析 · 四季推荐 · 天气影响</p>
+        <div class="hero-icon">📅</div>
+    </div>
+    """, unsafe_allow_html=True)
     
     tab1, tab2, tab3 = st.tabs(["🌡️ 气候分析", "🌸 四季推荐", "🌤️ 天气影响"])
     with tab1:
@@ -1576,7 +1827,13 @@ elif page == "📅 最佳旅行时间":
                 st.markdown("</div>", unsafe_allow_html=True)
 
 elif page == "🍜 美食推荐":
-    st.markdown("<h1>🍜 美食推荐</h1>", unsafe_allow_html=True)
+    st.markdown("""
+    <div class="hero-banner">
+        <h1>🍜 美食推荐</h1>
+        <p>温州味道 · 评分排行 · 价格分析</p>
+        <div class="hero-icon">🍜</div>
+    </div>
+    """, unsafe_allow_html=True)
     
     tab1, tab2, tab3 = st.tabs(["🏆 评分排行", "📊 类型分布", "💰 价格分析"])
     with tab1:
@@ -1625,3 +1882,10 @@ elif page == "🍜 美食推荐":
                         color_discrete_sequence=["#00b894","#00d4ff","#667eea","#764ba2"])
             fig = dark_fig(fig)
             st.plotly_chart(fig, use_container_width=True)
+
+# ========== 页脚 ==========
+st.markdown("""
+<div class="app-footer">
+    <p style="margin:0;">温州智旅 — 未来旅游数据平台 v3.0 · 数据可视化大作业</p>
+</div>
+""", unsafe_allow_html=True)
