@@ -13,7 +13,7 @@
 
 平台包含 **9个功能页面**、**23个交互式图表**、**14条智能推荐路线**，并集成了**实时天气数据**和**智能行程规划**功能。
 
-**在线体验：** https://wenzhou-travel-viz.streamlit.app
+**在线体验：** [https://wenzhou-travel-viz.streamlit.app](https://wenzhou-travel-viz-g78ygbtvnsqgl9pdvyzty9.streamlit.app/)
 
 ---
 
